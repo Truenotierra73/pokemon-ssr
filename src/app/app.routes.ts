@@ -10,7 +10,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/pricing-page/pricing-page.component'),
   },
   {
-    path: 'about',
+    path: 'contact',
     loadComponent: () => import('./pages/contact-page/contact-page.component'),
   },
   {
