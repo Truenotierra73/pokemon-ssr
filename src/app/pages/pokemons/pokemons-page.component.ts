@@ -3,8 +3,17 @@ import {
   Component,
   inject,
   OnDestroy,
-  OnInit, signal,
+  OnInit,
+  Signal,
+  signal,
+  WritableSignal,
 } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+
+import { toSignal } from '@angular/core/rxjs-interop';
+
+import { map, tap } from 'rxjs';
 
 import { PokemonListComponent } from '../../pokemons/components/pokemon-list/pokemon-list.component';
 import { PokemonListSkeletonComponent } from './ui/pokemon-list-skeleton/pokemon-list-skeleton.component';
@@ -14,19 +23,31 @@ import { SimplePokemon } from '../../pokemons/interfaces';
 import { PokemonsService } from '../../pokemons/services/pokemons.service';
 
 @Component({
-  selector: 'app-pokemons-page',
+  selector: 'pokemons-page',
   imports: [
     PokemonListComponent,
     PokemonListSkeletonComponent,
-    PokemonListComponent
+    PokemonListComponent,
   ],
   templateUrl: './pokemons-page.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class PokemonsPageComponent implements OnInit, OnDestroy {
   private readonly pokemonsService: PokemonsService = inject(PokemonsService);
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly router: Router = inject(Router);
+  private readonly title: Title = inject(Title);
 
-  public pokemons = signal<SimplePokemon[]>([]);
+  public pokemons: WritableSignal<SimplePokemon[]> = signal<SimplePokemon[]>(
+    [],
+  );
+  public currentPage: Signal<number | undefined> = toSignal<number>(
+    this.route.queryParamMap.pipe(
+      map((params: ParamMap) => params.get('page') ?? '1'),
+      map((page: string) => (isNaN(+page) ? 1 : +page)),
+      map((page: number) => Math.max(1, page)),
+    ),
+  );
   // private readonly appRef: ApplicationRef = inject(ApplicationRef);
 
   // public isLoading: WritableSignal<boolean> = signal<boolean>(true);
@@ -46,8 +67,20 @@ export default class PokemonsPageComponent implements OnInit, OnDestroy {
   }
 
   loadPokemons(page: number = 0): void {
-    this.pokemonsService.loadPage(page).subscribe(pokemons => {
-      this.pokemons.set(pokemons);
-    });
+    const pageToLoad = this.currentPage()! + page;
+
+    if (pageToLoad === 0) return;
+
+    this.pokemonsService
+      .loadPage(pageToLoad)
+      .pipe(
+        tap(() => {
+          this.router.navigate([], { queryParams: { page: pageToLoad } });
+          this.title.setTitle(`Pokémons SSR - Page ${pageToLoad}`);
+        }),
+      )
+      .subscribe((pokemons) => {
+        this.pokemons.set(pokemons);
+      });
   }
 }
