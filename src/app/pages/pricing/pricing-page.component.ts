@@ -1,9 +1,15 @@
 import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-pricing-page',
+  selector: 'pricing-page',
   imports: [],
   templateUrl: './pricing-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,8 +25,14 @@ export default class PricingPageComponent implements OnInit {
     // }
 
     this.title.setTitle('Pricing Page');
-    this.meta.updateTag({ name: 'description', content: 'Esta es mi Pricing Page' });
+    this.meta.updateTag({
+      name: 'description',
+      content: 'Esta es mi Pricing Page',
+    });
     this.meta.updateTag({ name: 'og:title', content: 'Pricing Page' });
-    this.meta.updateTag({ name: 'keyboards', content: 'Hola,Mundo,Agustin,Bollati,Curso,Angular,PRO' });
+    this.meta.updateTag({
+      name: 'keyboards',
+      content: 'Hola,Mundo,Agustin,Bollati,Curso,Angular,PRO',
+    });
   }
 }
