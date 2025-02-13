@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   OnDestroy,
   OnInit,
@@ -9,7 +10,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -28,6 +29,7 @@ import { PokemonsService } from '../../pokemons/services/pokemons.service';
     PokemonListComponent,
     PokemonListSkeletonComponent,
     PokemonListComponent,
+    RouterLink,
   ],
   templateUrl: './pokemons-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,8 +44,8 @@ export default class PokemonsPageComponent implements OnInit, OnDestroy {
     [],
   );
   public currentPage: Signal<number | undefined> = toSignal<number>(
-    this.route.queryParamMap.pipe(
-      map((params: ParamMap) => params.get('page') ?? '1'),
+    this.route.params.pipe(
+      map((params: Params) => params['page'] ?? '1'),
       map((page: string) => (isNaN(+page) ? 1 : +page)),
       map((page: number) => Math.max(1, page)),
     ),
@@ -53,11 +55,15 @@ export default class PokemonsPageComponent implements OnInit, OnDestroy {
   // public isLoading: WritableSignal<boolean> = signal<boolean>(true);
   // private readonly $isStable = this.appRef.isStable.subscribe(isStable => console.log({ isStable }));
 
+  private readonly loadOnPageChanged = effect(() => {
+    this.loadPokemons();
+  });
+
   ngOnInit(): void {
     // setTimeout(() => {
     //   this.isLoading.set(false);
     // }, 5000);
-    this.loadPokemons();
+    // this.loadPokemons();
   }
 
   ngOnDestroy(): void {
@@ -75,7 +81,7 @@ export default class PokemonsPageComponent implements OnInit, OnDestroy {
       .loadPage(pageToLoad)
       .pipe(
         tap(() => {
-          this.router.navigate([], { queryParams: { page: pageToLoad } });
+          // this.router.navigate([], { queryParams: { page: pageToLoad } });
           this.title.setTitle(`Pokémons SSR - Page ${pageToLoad}`);
         }),
       )

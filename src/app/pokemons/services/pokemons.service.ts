@@ -36,7 +36,7 @@ export class PokemonsService {
       );
   }
 
-  loadPokemon(id: Pokemon['id']): Observable<Pokemon> {
+  loadPokemon(id: Pokemon['name']): Observable<Pokemon> {
     return this.http.get<Pokemon>(`https://pokeapi.co/api/v2/pokemon/${id}`);
   }
 }

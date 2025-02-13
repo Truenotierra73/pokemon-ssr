@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,7 +12,7 @@ import { SimplePokemon } from '../../interfaces';
 
 @Component({
   selector: 'pokemon-card',
-  imports: [NgOptimizedImage],
+  imports: [],
   templateUrl: './pokemon-card.component.html',
   styleUrl: './pokemon-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +26,6 @@ export class PokemonCardComponent {
   private readonly router: Router = inject(Router);
 
   protected navigate() {
-    console.log('Navigating', this.pokemon().id);
-    this.router.navigate(['pokemons', this.pokemon().id]);
+    this.router.navigate(['pokemons', this.pokemon().name]);
   }
 }

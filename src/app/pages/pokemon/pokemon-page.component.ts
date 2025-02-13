@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+
 import { tap } from 'rxjs';
 
 import { Pokemon } from '../../pokemons/interfaces';
@@ -39,7 +40,7 @@ export default class PokemonPageComponent implements OnInit {
     if (!id) return;
 
     this.pokemonsService
-      .loadPokemon(+id)
+      .loadPokemon(id)
       .pipe(
         tap(({ id, name }: Pokemon) => {
           const pageTitle = `#${id} - ${name.charAt(0).toUpperCase() + name.slice(1)}`;
