@@ -1,4 +1,10 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { provideRouter } from '@angular/router';
+
+import { PokemonsService } from '../../pokemons/services/pokemons.service';
 
 import PokemonsPageComponent from './pokemons-page.component';
 
@@ -8,9 +14,14 @@ describe('PokemonsPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PokemonsPageComponent]
-    })
-    .compileComponents();
+      imports: [PokemonsPageComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        PokemonsService,
+        provideRouter([]),
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PokemonsPageComponent);
     component = fixture.componentInstance;

@@ -19,7 +19,6 @@ import { PokemonsService } from '../../pokemons/services/pokemons.service';
   selector: 'pokemon-page',
   imports: [],
   templateUrl: './pokemon-page.component.html',
-  styleUrl: './pokemon-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class PokemonPageComponent implements OnInit {

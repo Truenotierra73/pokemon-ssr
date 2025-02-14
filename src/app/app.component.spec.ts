@@ -1,29 +1,39 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
+  let fixture: ComponentFixture<AppComponent>;
+  let component: AppComponent;
+  let compiled: HTMLElement;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    compiled = fixture.nativeElement;
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
   it(`should have the 'pokemon-ssr' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('pokemon-ssr');
+    expect(component.title).toBe('pokemon-ssr');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, pokemon-ssr');
+  it('should render the navbar and router-outlet', () => {
+    const navbar: HTMLElement | null = compiled.querySelector('app-navbar');
+    const routerOutlet: HTMLElement | null =
+      compiled.querySelector('router-outlet');
+    console.log(navbar, routerOutlet);
+
+    expect(navbar).not.toBeNull();
+    expect(routerOutlet).not.toBeNull();
   });
 });

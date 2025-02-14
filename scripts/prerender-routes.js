@@ -1,13 +1,13 @@
-const TOTAL_POKEMONS = 10;
-const TOTAL_PAGES = 10;
+const TOTAL_POKEMONS = 20;
+const TOTAL_PAGES = 20;
 
 (async () => {
-  // "use strict";
+  "use strict";
 
   const fs = require("fs");
 
   const pokemonIds = Array.from({ length: TOTAL_POKEMONS }, (_, i) => i + 1);
-  const totalPages = Array.from({ length: TOTAL_POKEMONS }, (_, i) => i + 1);
+  const totalPages = Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1);
 
   let fileContent = pokemonIds.map((id) => `/pokemons/${id}`).join("\n");
   fileContent =
