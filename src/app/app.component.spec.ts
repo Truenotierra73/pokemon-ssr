@@ -1,7 +1,15 @@
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
+
+@Component({
+  selector: 'app-navbar',
+  template: ``,
+})
+class NavbarComponentMock {}
 
 describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -9,10 +17,28 @@ describe('AppComponent', () => {
   let compiled: HTMLElement;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-      providers: [provideRouter([])],
-    }).compileComponents();
+    // NOTE: Forma recomendada
+    // await TestBed.configureTestingModule({
+    //   imports: [AppComponent],
+    //   providers: [provideRouter([])],
+    // })
+    //   .overrideComponent(AppComponent, {
+    //     add: {
+    //       imports: [NavbarComponentMock],
+    //     },
+    //     remove: {
+    //       imports: [NavbarComponent],
+    //     },
+    //   })
+    //   .compileComponents();
+
+    // NOTE: Otra forma, pero no tan recomendada
+    TestBed.overrideComponent(AppComponent, {
+      set: {
+        imports: [NavbarComponentMock],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      },
+    });
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
@@ -31,9 +57,8 @@ describe('AppComponent', () => {
     const navbar: HTMLElement | null = compiled.querySelector('app-navbar');
     const routerOutlet: HTMLElement | null =
       compiled.querySelector('router-outlet');
-    console.log(navbar, routerOutlet);
 
-    expect(navbar).not.toBeNull();
-    expect(routerOutlet).not.toBeNull();
+    expect(navbar).toBeTruthy();
+    expect(routerOutlet).toBeTruthy();
   });
 });
