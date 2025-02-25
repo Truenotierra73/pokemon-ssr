@@ -1,11 +1,15 @@
 #!/bin/bash
 set -e
 
-# Descarga e instala Google Chrome
 echo "Installing Google Chrome..."
-wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install -y google-chrome-stable
 
-# Verifica la instalación
+# Agregar la clave de firma y el repositorio de Google
+wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list
+
+# Actualizar e instalar Chrome sin sudo
+apt-get update && apt-get install -y google-chrome-stable
+
+# Verificar instalación
 google-chrome --version
+
