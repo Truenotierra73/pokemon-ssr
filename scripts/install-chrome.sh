@@ -1,15 +1,19 @@
 #!/bin/bash
 set -e
 
-echo "Installing Google Chrome..."
+echo "Installing Google Chrome without root..."
 
-# Agregar la clave de firma y el repositorio de Google
-wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list
+# Crear directorio temporal para la instalación
+mkdir -p $HOME/chrome
 
-# Actualizar e instalar Chrome sin sudo
-apt-get update && apt-get install -y google-chrome-stable
+# Descargar el paquete .deb de Chrome
+wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O $HOME/chrome/chrome.deb
 
-# Verificar instalación
-google-chrome --version
+# Extraer los archivos del paquete .deb
+dpkg-deb -x $HOME/chrome/chrome.deb $HOME/chrome
 
+# Definir la variable CHROME_BIN para usar Chrome desde la ubicación local
+export CHROME_BIN="$HOME/chrome/opt/google/chrome/chrome"
+
+# Verificar la instalación
+$CHROME_BIN --version || echo "Chrome installation failed"
